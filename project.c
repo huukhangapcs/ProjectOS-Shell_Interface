@@ -33,7 +33,10 @@ int main(void)
                         }
                         else if (strcmp(cmd, "exit")==0)
                             run = 0;
-
+                        else if (strcmp(cmd, "pwd")==0)
+                            getWorkingDirectory();
+                        else if (strcmp(cmd, "ls")==0)
+                            listSubDirectory();
                         /**
                         * After reading user input, the steps are:
                         * (1) fork a child process using fork()
