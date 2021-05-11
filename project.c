@@ -22,8 +22,11 @@ int main(void)
 
 
             while (run) {
+                
                         printf("osh>");
                         fflush(stdout);
+                        for(int i = 0; i <(MAX_LINE/2 + 1);i++)
+				            args[i] = '\0';
                         fgets(cmd, MAX_LINE, stdin);
                         if (strcmp(cmd, final_history) != 0)
                             fputs(cmd, fp);
@@ -37,6 +40,23 @@ int main(void)
                             getWorkingDirectory();
                         else if (strcmp(cmd, "ls")==0)
                             listSubDirectory();
+                        else{
+                            
+                            splitToken(cmd, args); 
+                            if (strcmp(args[0], "cd")==0){
+                                if (args[1] != NULL){
+                                    if (chdir(args[1])!=0){
+                                        perror(args[1]);
+                                    }
+                                }
+                            }
+                            else if (strcmp(args[0], "sort")==0){
+                                if (args[1] != NULL){
+                                    sortFile(args[1]);
+                                }
+
+                            }
+                        }
                         /**
                         * After reading user input, the steps are:
                         * (1) fork a child process using fork()
