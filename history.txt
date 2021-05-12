@@ -1,0 +1,6 @@
+os
+pwd
+ps
+exec < a > b
+exit
+history <
