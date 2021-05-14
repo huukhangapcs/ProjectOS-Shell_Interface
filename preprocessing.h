@@ -6,9 +6,14 @@
 
 void get_previous_command(char *cmd){
     strcpy(cmd,"\n");
+    char tmp[80]; 
     FILE *fp;
     fp  = fopen("history.txt", "a+");
-    while( fgets(cmd, sizeof(cmd), fp)!=NULL ){}
+    while( fgets(tmp, sizeof(tmp), fp)){
+        if (!strcmp(tmp,"") || !strcmp(tmp,"\n"))
+            break;
+        strcpy(cmd, tmp);
+    }
     fclose(fp);
 }
 void init_shell(char* cmd){
@@ -16,13 +21,13 @@ void init_shell(char* cmd){
     fflush(stdout);
     fgets(cmd, MAX_LINE, stdin);
 }
-void set_shell_state(char* args[], int*iFlag, int*oFlag, int*stdin, int*stdout){
+void set_shell_state(char* args[], int*iFlag, int*oFlag, int*std, int* doneBuiltins){
     for(int i = 0; i <(MAX_LINE/2 + 1);i++)
 		args[i] = '\0';
     *iFlag = 0;
     *oFlag = 0;
-    *stdin = 0;
-    *stdout = 0;
+    *std = 0;
+    *doneBuiltins = 0;
 }
 void save_history(char* cmd, char* history){
     if (strcmp(cmd, history) != 0){
@@ -37,12 +42,11 @@ void process_command(char* cmd, char*args[], int *iFlag, int *oFlag){
     int i = 0;
     args[i] = token;
     while(token != NULL){
-        i++;
         if (!strcmp(token,"<"))
-            *iFlag = i;
+            *iFlag = i+1;
         else if (!strcmp(token,">"))
-            *oFlag = i;
-        args[i] = token;
+            *oFlag = i+1;
+        args[i++] = token;
     	token = strtok(NULL, " ");
     }
 }
